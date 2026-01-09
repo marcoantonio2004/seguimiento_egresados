@@ -1,9 +1,10 @@
 import psycopg2
-import psycopg2.extras
 import os
 
-DATABASE_URL = os.environ.get("DATABASE_PUBLIC_URL")
-
 def get_connection():
-    conn = psycopg2.connect(DATABASE_URL)
-    return conn
+    database_url = os.environ.get("DATABASE_PUBLIC_URL")
+
+    if not database_url:
+        raise Exception("DATABASE_PUBLIC_URL no está definida")
+
+    return psycopg2.connect(database_url)
