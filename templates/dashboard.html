@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
 
+    <!-- Estilos globales y específicos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 <body>
+    <!-- Botón hamburguesa para móviles -->
+    <button class="toggle-btn">☰</button>
+
     <div class="dashboard-container">
 
-        <!-- MENÚ LATERAL -->
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <h2>Menú</h2>
             <nav class="menu">
@@ -23,11 +27,44 @@
 
         <!-- CONTENIDO PRINCIPAL -->
         <main class="main-content">
-            <h1>Bienvenido al Panel del Administrador</h1>
-            <p class="info">Cantidad de alumnos registrados: <span class="cantidad">{{ cantidad_alumnos }}</span></p>
-            <p>Seleccione una opción del menú a la izquierda.</p>
+            <h1>Bienvenido al panel del administrador</h1>
+
+            <!-- TARJETAS DE ESTADÍSTICAS -->
+            <div class="stats">
+                <div class="stat-card">
+                    <p class="info">Alumnos totales</p>
+                    <p class="cantidad">{{ alumnos_totales }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <p class="info">Egresados</p>
+                    <p class="cantidad">{{ total_egresados }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <p class="info">Titulados</p>
+                    <p class="cantidad">{{ total_titulados }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <p class="info">En seguimiento</p>
+                    <p class="cantidad">{{ total_seguimiento }}</p>
+                </div>
+            </div>
+
+            <p>Seleccione una opción del menú para comenzar.</p>
         </main>
 
     </div>
+
+    <!-- Script para toggle del menú en móviles -->
+    <script>
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.querySelector('.toggle-btn');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
