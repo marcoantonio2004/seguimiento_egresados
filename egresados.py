@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from db import get_connection
 from functools import wraps
+import psycopg2.extras
 
 egresados_bp = Blueprint("egresados", __name__)
 
@@ -17,8 +18,14 @@ def login_required(f):
 @login_required
 def listar_egresados():
     conn = get_connection()
-    egresados = conn.execute("SELECT * FROM egresados").fetchall()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    cur.execute("SELECT * FROM egresados")
+    egresados = cur.fetchall()
+
+    cur.close()
     conn.close()
+
     return render_template("egresados.html", egresados=egresados)
 
 
@@ -39,15 +46,27 @@ def registrar_egresado():
         )
 
         conn = get_connection()
-        conn.execute("""
-            INSERT INTO egresados 
-            (matricula, nombre_completo, carrera, generacion, estatus, domicilio, genero, telefono, correo)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        cur = conn.cursor()
+
+        cur.execute("""
+            INSERT INTO egresados (
+                matricula,
+                nombre_completo,
+                carrera,
+                generacion,
+                estatus,
+                domicilio,
+                genero,
+                telefono,
+                correo
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, datos)
+
         conn.commit()
+        cur.close()
         conn.close()
 
         return redirect(url_for("egresados.listar_egresados"))
 
     return render_template("registrar_egresado.html")
-

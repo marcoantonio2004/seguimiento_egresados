@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from db import get_connection
 import bcrypt
+import psycopg2.extras
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -11,9 +12,15 @@ def login():
         password = request.form["password"]
 
         conn = get_connection()
-        user = conn.execute(
-            "SELECT * FROM usuarios WHERE usuario = ?", (usuario,)
-        ).fetchone()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cur.execute(
+            "SELECT * FROM usuarios WHERE usuario = %s",
+            (usuario,)
+        )
+        user = cur.fetchone()
+
+        cur.close()
         conn.close()
 
         if user and bcrypt.checkpw(password.encode(), user["password"].encode()):

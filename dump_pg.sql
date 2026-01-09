@@ -1,0 +1,14 @@
+BEGIN TRANSACTION;
+CREATE TABLE `egresados` (`id`, `matricula`, `nombre_completo`, `carrera`, `generacion`, `estatus`, `domicilio`, `genero`, `telefono`, `correo`, `fecha_registro`);
+INSERT INTO "egresados" VALUES('1','13220056','jose','Ingeniería en Sistemas Computacionales','2015-2020','En seguimiento','san jose','Masculino','0987654321','marc@gmail.com','2025-12-30 00:41:50');
+INSERT INTO "egresados" VALUES('4','13110013','Jose','Licenciatura en Contaduría','2007-2012','En seguimiento','San Jose','Masculino','7123658076','jose@gmail.com','2026-01-02 01:24:38');
+INSERT INTO "egresados" VALUES('5','13140024','Maria','Licenciatura en Contaduría','2012-2017','Titulado','San Felipe','Masculino','7123658076','mari13@gmail.com','2026-01-02 01:26:36');
+INSERT INTO "egresados" VALUES('6','13180045','Martin','Ingeniería en Sistemas Computacionales','2018-2023','Egresado','Providencia','Masculino','5516519747','martin.90@gmail.com','2026-01-02 01:27:55');
+INSERT INTO "egresados" VALUES('7','13190034','Rodolfo','Ingeniería en Sistemas Computacionales','2016-2021','Egresado','San Felipe','Masculino','7123658076','rodos@gmail.com','2026-01-02 02:56:47');
+INSERT INTO "egresados" VALUES(NULL,'13220089','Marco','Licenciatura en Contaduría','2012-2017','Egresado','San Jose','Masculino','7121008909','joess@gmail.com',NULL);
+CREATE TABLE `usuarios` (`id`, `usuario`, `password`, `rol`, `creado_en`, `role`);
+INSERT INTO "usuarios" VALUES('1','admin','$2b$12$wEthgXb.PnAkObqvy0Q7I.BSmdZymLjLc9.zUw0ZnNpmGrN/gnoze','admin','2025-12-30 00:33:55','coordinador');
+INSERT INTO "usuarios" VALUES('2','Marco','$2b$12$w2FGNgBAdgkVi4B3H2iPTOngSWiqxwBXpURKn7/apTKCm.xApXufm','admin','2025-12-30 00:58:28','maestro');
+INSERT INTO "usuarios" VALUES('3','toño','$2b$12$2Hi.ub5RywWMG.Ki47EQkeR2aow5u6vtpBahww//kT/.3dRSwIILC','admin','2025-12-30 01:03:37','coordinador');
+INSERT INTO "usuarios" VALUES('4','testuser','$2b$12$cwCpEOiApAhkhyg85HqdMuDdDdjRMFZEYVm0Fmw3jql/J2UFZFbYq','admin','2025-12-30 01:11:52','coordinador');
+COMMIT;
