@@ -1,30 +1,126 @@
-.login-box {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 25px;
-    background: var(--gris-card);
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+/* ============================== */
+/* FONDO GENERAL */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-image: url("../img/fondo.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: var(--fuente-principal);
 }
 
+/* ============================== */
+/* CAJA DE LOGIN */
+.login-box {
+    width: 90%;                 /* ancho flexible */
+    max-width: 400px;
+    min-width: 320px;
+    padding: 25px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.85); /* fondo semi-transparente */
+    backdrop-filter: blur(10px);          /* efecto glass */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover */
+.login-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
+
+/* ============================== */
+/* TÍTULO */
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--verde-oscuro);
+}
+
+/* ============================== */
+/* FORMULARIOS */
 form label {
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
+    color: var(--gris-texto);
 }
 
 form input {
-    padding: 10px;
     width: 100%;
+    padding: 10px;
     border-radius: 6px;
     border: 1px solid var(--gris-borde);
     margin-bottom: 15px;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 form input:focus {
+    outline: none;
     border-color: var(--verde-medio);
+    box-shadow: 0 0 8px rgba(56, 142, 60, 0.5);
 }
 
+/* ============================== */
+/* BOTONES */
 form button {
     width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    background-color: var(--verde-medio);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+form button:hover {
+    background-color: var(--verde-oscuro);
+    transform: scale(1.03);
+}
+
+/* ============================== */
+/* ENLACES DENTRO DEL LOGIN */
+.login-box a {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    color: var(--verde-medio);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.login-box a:hover {
+    color: var(--verde-oscuro);
+}
+
+/* ============================== */
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .login-box {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-box {
+        width: 100%;
+        padding: 15px;
+    }
+
+    form button {
+        padding: 10px;
+    }
 }
