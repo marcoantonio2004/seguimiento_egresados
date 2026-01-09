@@ -7,41 +7,55 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario.css') }}">
 </head>
 <body>
-    <h2>Registrar Egresado</h2>
+    <div class="container">
+        <h2>Registrar Egresado</h2>
 
-    <form method="POST">
-        <input type="text" name="matricula" placeholder="Matrícula" required><br><br>
-        <input type="text" name="nombre" placeholder="Nombre completo" required><br><br>
+        <form method="POST">
 
-        <select name="carrera" required>
-            <option value="">Seleccione carrera</option>
-            <option>Ingeniería en Innovación Agrícola Sustentable</option>
-            <option>Ingeniería en Sistemas Computacionales</option>
-            <option>Licenciatura en Contaduría</option>
-        </select><br><br>
+            <label for="matricula">Matrícula:</label>
+            <input type="text" id="matricula" name="matricula" required>
 
-        <input type="text" name="generacion" placeholder="Generación (2014-2019)" required><br><br>
+            <label for="nombre">Nombre completo:</label>
+            <input type="text" id="nombre" name="nombre" required>
 
-        <select name="estatus" required>
-            <option>Egresado</option>
-            <option>En seguimiento</option>
-            <option>Titulado</option>
-        </select><br><br>
+            <label for="carrera">Carrera:</label>
+            <select id="carrera" name="carrera" required>
+                <option value="">Seleccione carrera</option>
+                <option>Ingeniería en Innovación Agrícola Sustentable</option>
+                <option>Ingeniería en Sistemas Computacionales</option>
+                <option>Licenciatura en Contaduría</option>
+            </select>
 
-        <input type="text" name="domicilio" placeholder="Domicilio"><br><br>
+            <label for="generacion">Generación:</label>
+            <input type="text" id="generacion" name="generacion" placeholder="2014-2019" required>
 
-        <select name="genero">
-            <option>Masculino</option>
-            <option>Femenino</option>
-        </select><br><br>
+            <label for="estatus">Estatus:</label>
+            <select id="estatus" name="estatus" required>
+                <option>Egresado</option>
+                <option>En seguimiento</option>
+                <option>Titulado</option>
+            </select>
 
-        <input type="text" name="telefono" placeholder="Teléfono"><br><br>
-        <input type="email" name="correo" placeholder="Correo electrónico"><br><br>
+            <label for="domicilio">Domicilio:</label>
+            <input type="text" id="domicilio" name="domicilio">
 
-        <button type="submit">Guardar</button>
-    </form>
+            <label for="genero">Género:</label>
+            <select id="genero" name="genero">
+                <option>Masculino</option>
+                <option>Femenino</option>
+            </select>
 
-    <br>
-    <a href="{{ url_for('dashboard') }}">Cancelar</a>
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" name="telefono">
+
+            <label for="correo">Correo electrónico:</label>
+            <input type="email" id="correo" name="correo">
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <br>
+        <a href="{{ url_for('dashboard') }}">Cancelar</a>
+    </div>
 </body>
 </html>
