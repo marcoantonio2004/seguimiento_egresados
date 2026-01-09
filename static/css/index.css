@@ -1,19 +1,53 @@
-.inicio {
-    text-align: center;
-    margin-top: 50px;
+/* Fondo general */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-image: url("../img/fondo.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
+/* Contenedor con blur centrado */
+.inicio {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    /* Difuminado */
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+
+    padding: 40px 60px;
+}
+
+/* Texto */
+.inicio h1,
+.inicio p {
+    color: #fff;
+}
+
+/* Botón */
 .btn-login {
-    display: inline-block;
     margin-top: 25px;
-    padding: 12px 25px;
+    padding: 12px 30px;
     border-radius: 6px;
     background-color: var(--verde-medio);
     color: white;
     font-weight: 600;
-    transition: 0.3s;
+    text-decoration: none;
+
+    /* Animación */
+    transition: transform 0.25s ease, background-color 0.3s ease;
 }
 
+/* Zoom al pasar el cursor */
 .btn-login:hover {
     background-color: var(--verde-oscuro);
+    transform: scale(1.08);
+    color: white; /* asegura que el texto no desaparezca */
 }
