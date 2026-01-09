@@ -17,6 +17,3 @@ def dashboard():
     if "usuario" not in session:
         return redirect(url_for("auth.login"))
     return render_template("dashboard.html")
-
-if __name__ == "__main__":
-    app.run(debug=True)
