@@ -1,20 +1,4 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-th {
-    background-color: #003366;
-    color: white;
-    padding: 10px;
-}
-
-td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-}
-
+/* TABLA DE EGRESADOS */
 .acciones {
     display: flex;
     gap: 8px;
@@ -23,27 +7,25 @@ td {
 .btn-editar {
     background-color: #ffc107;
     color: #000;
-    padding: 6px 10px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
     font-size: 14px;
+    transition: 0.3s;
 }
 
 .btn-editar:hover {
     background-color: #e0a800;
 }
 
-.form-eliminar {
-    display: inline;
-}
-
 .btn-eliminar {
     background-color: #dc3545;
     color: white;
-    padding: 6px 10px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
     font-size: 14px;
     border: none;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 .btn-eliminar:hover {

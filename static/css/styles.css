@@ -1,63 +1,127 @@
+/* ============================== */
+/* VARIABLES GLOBALES */
+:root {
+    --verde-oscuro: #0b3d1e;
+    --verde-medio: #388e3c;
+    --gris-fondo: #f4f6f9;
+    --gris-card: #ffffff;
+    --gris-texto: #333;
+    --gris-borde: #ccc;
+
+    --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ============================== */
 /* RESET GENERAL */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: var(--fuente-principal);
 }
 
+/* ============================== */
 /* BODY */
 body {
-    background-color: #f4f6f9;
-    color: #333;
-    padding: 40px;
+    display: flex;
+    min-height: 100vh;
+    background: var(--gris-fondo);
+    color: var(--gris-texto);
 }
 
-/* CONTENEDOR */
+/* ============================== */
+/* CONTENEDOR GENERAL */
 .container {
-    max-width: 900px;
-    margin: auto;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
+    flex: 1;
+    margin: 20px;
+    padding: 25px;
+    background: var(--gris-card);
+    border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* TÍTULOS */
-h1, h2 {
-    color: #003366;
+/* ============================== */
+/* TITULOS */
+h1, h2, h3 {
+    color: var(--verde-oscuro);
     margin-bottom: 20px;
+    font-weight: 700;
 }
 
+/* ============================== */
 /* ENLACES */
 a {
     text-decoration: none;
-    color: #0056b3;
+    color: var(--verde-medio);
     font-weight: 500;
+    transition: 0.3s;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: var(--verde-oscuro);
 }
 
+/* ============================== */
 /* BOTONES */
-button {
-    background-color: #003366;
+button, .btn {
+    background-color: var(--verde-medio);
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 10px 18px;
+    border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
+    transition: 0.3s;
 }
 
-button:hover {
-    background-color: #002244;
+button:hover, .btn:hover {
+    background-color: var(--verde-oscuro);
 }
 
+/* ============================== */
+/* INPUTS Y SELECTS */
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid var(--gris-borde);
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--verde-medio);
+}
+
+/* ============================== */
+/* TABLAS */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th {
+    background-color: var(--verde-oscuro);
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* ============================== */
 /* RESPONSIVE */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     body {
-        padding: 15px;
+        flex-direction: column;
+    }
+    .container {
+        margin: 10px;
     }
 }
+
