@@ -16,7 +16,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated
 
-
 # =========================
 # LISTAR EGRESADOS
 # =========================
@@ -25,15 +24,11 @@ def login_required(f):
 def listar_egresados():
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
     cur.execute("SELECT * FROM egresados ORDER BY id DESC")
     egresados = cur.fetchall()
-
     cur.close()
     conn.close()
-
     return render_template("egresados.html", egresados=egresados)
-
 
 # =========================
 # REGISTRAR EGRESADO
@@ -44,7 +39,6 @@ def registrar_egresado():
     if request.method == "POST":
         conn = get_connection()
         cur = conn.cursor()
-
         cur.execute("""
             INSERT INTO egresados
             (matricula, nombre_completo, carrera, generacion, estatus,
@@ -61,15 +55,11 @@ def registrar_egresado():
             request.form["telefono"],
             request.form["correo"]
         ))
-
         conn.commit()
         cur.close()
         conn.close()
-
         return redirect(url_for("egresados.listar_egresados"))
-
     return render_template("registrar_egresado.html")
-
 
 # =========================
 # EDITAR EGRESADO
@@ -83,15 +73,50 @@ def editar_egresado(id):
     if request.method == "POST":
         cur.execute("""
             UPDATE egresados
-            SET nombre_completo = %s,
+            SET matricula = %s,
+                nombre_completo = %s,
+                carrera = %s,
+                generacion = %s,
+                estatus = %s,
+                domicilio = %s,
+                genero = %s,
                 telefono = %s,
                 correo = %s
             WHERE id = %s
         """, (
+            request.form["matricula"],
             request.form["nombre"],
+            request.form["carrera"],
+            request.form["generacion"],
+            request.form["estatus"],
+            request.form["domicilio"],
+            request.form["genero"],
             request.form["telefono"],
             request.form["correo"],
             id
         ))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect(url_for("egresados.listar_egresados"))
 
-        conn.commi
+    # GET: obtener datos existentes
+    cur.execute("SELECT * FROM egresados WHERE id = %s", (id,))
+    egresado = cur.fetchone()
+    cur.close()
+    conn.close()
+    return render_template("editar_egresado.html", egresado=egresado)
+
+# =========================
+# ELIMINAR EGRESADO
+# =========================
+@egresados_bp.route("/egresados/eliminar/<int:id>")
+@login_required
+def eliminar_egresado(id):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM egresados WHERE id = %s", (id,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for("egresados.listar_egresados"))

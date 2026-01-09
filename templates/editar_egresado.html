@@ -4,19 +4,58 @@
     <meta charset="UTF-8">
     <title>Editar Egresado</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario.css') }}">
 </head>
 <body>
-    <h2>Editar Egresado</h2>
+    <div class="container">
+        <h2>Editar Egresado</h2>
 
-    <form method="POST">
-        <input type="text" name="nombre" value="{{ egresado.nombre_completo }}" required><br><br>
-        <input type="text" name="telefono" value="{{ egresado.telefono }}"><br><br>
-        <input type="email" name="correo" value="{{ egresado.correo }}"><br><br>
+        <form method="POST">
 
-        <button type="submit">Actualizar</button>
-    </form>
+            <label for="matricula">Matrícula:</label>
+            <input type="text" id="matricula" name="matricula" value="{{ egresado.matricula }}" required><br><br>
 
-    <a href="{{ url_for('egresados.listar_egresados') }}">Volver</a>
+            <label for="nombre">Nombre completo:</label>
+            <input type="text" id="nombre" name="nombre" value="{{ egresado.nombre_completo }}" required><br><br>
+
+            <label for="carrera">Carrera:</label>
+            <select id="carrera" name="carrera" required>
+                <option value="">Seleccione carrera</option>
+                <option value="Ingeniería en Innovación Agrícola Sustentable" {% if egresado.carrera == 'Ingeniería en Innovación Agrícola Sustentable' %}selected{% endif %}>Ingeniería en Innovación Agrícola Sustentable</option>
+                <option value="Ingeniería en Sistemas Computacionales" {% if egresado.carrera == 'Ingeniería en Sistemas Computacionales' %}selected{% endif %}>Ingeniería en Sistemas Computacionales</option>
+                <option value="Licenciatura en Contaduría" {% if egresado.carrera == 'Licenciatura en Contaduría' %}selected{% endif %}>Licenciatura en Contaduría</option>
+            </select><br><br>
+
+            <label for="generacion">Generación:</label>
+            <input type="text" id="generacion" name="generacion" value="{{ egresado.generacion }}" required><br><br>
+
+            <label for="estatus">Estatus:</label>
+            <select id="estatus" name="estatus" required>
+                <option value="Egresado" {% if egresado.estatus == 'Egresado' %}selected{% endif %}>Egresado</option>
+                <option value="En seguimiento" {% if egresado.estatus == 'En seguimiento' %}selected{% endif %}>En seguimiento</option>
+                <option value="Titulado" {% if egresado.estatus == 'Titulado' %}selected{% endif %}>Titulado</option>
+            </select><br><br>
+
+            <label for="domicilio">Domicilio:</label>
+            <input type="text" id="domicilio" name="domicilio" value="{{ egresado.domicilio }}"><br><br>
+
+            <label for="genero">Género:</label>
+            <select id="genero" name="genero">
+                <option value="Masculino" {% if egresado.genero == 'Masculino' %}selected{% endif %}>Masculino</option>
+                <option value="Femenino" {% if egresado.genero == 'Femenino' %}selected{% endif %}>Femenino</option>
+            </select><br><br>
+
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" name="telefono" value="{{ egresado.telefono }}"><br><br>
+
+            <label for="correo">Correo electrónico:</label>
+            <input type="email" id="correo" name="correo" value="{{ egresado.correo }}"><br><br>
+
+            <button type="submit">Guardar cambios</button>
+        </form>
+
+        <br>
+        <a href="{{ url_for('egresados.listar_egresados') }}">Cancelar</a>
+    </div>
 </body>
 </html>

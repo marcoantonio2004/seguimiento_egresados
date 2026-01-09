@@ -19,6 +19,7 @@
                 <th>Carrera</th>
                 <th>Generación</th>
                 <th>Estatus</th>
+                <th>Acciones</th>
             </tr>
             {% for e in egresados %}
             <tr>
@@ -27,6 +28,10 @@
                 <td>{{ e.carrera }}</td>
                 <td>{{ e.generacion }}</td>
                 <td>{{ e.estatus }}</td>
+                <td>
+                    <a href="{{ url_for('egresados.editar_egresado', id=e.id) }}" class="btn-editar">Editar</a>
+                    <a href="{{ url_for('egresados.eliminar_egresado', id=e.id) }}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este egresado?');">Eliminar</a>
+                </td>
             </tr>
             {% endfor %}
         </table>
