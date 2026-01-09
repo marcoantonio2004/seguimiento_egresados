@@ -1,0 +1,16 @@
+.inicio {
+    text-align: center;
+}
+
+.btn-login {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 25px;
+    background-color: #0056b3;
+    color: white;
+    border-radius: 6px;
+}
+
+.btn-login:hover {
+    background-color: #003366;
+}

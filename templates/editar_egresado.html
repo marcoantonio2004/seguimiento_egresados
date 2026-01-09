@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Egresado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+</head>
+<body>
+    <h2>Editar Egresado</h2>
+
+    <form method="POST">
+        <input type="text" name="nombre" value="{{ egresado.nombre_completo }}" required><br><br>
+        <input type="text" name="telefono" value="{{ egresado.telefono }}"><br><br>
+        <input type="email" name="correo" value="{{ egresado.correo }}"><br><br>
+
+        <button type="submit">Actualizar</button>
+    </form>
+
+    <a href="{{ url_for('egresados.listar_egresados') }}">Volver</a>
+</body>
+</html>

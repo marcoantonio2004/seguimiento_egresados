@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Egresados</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/egresados.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Egresados Registrados</h2>
+
+        {% if egresados %}
+        <table>
+            <tr>
+                <th>Matrícula</th>
+                <th>Nombre</th>
+                <th>Carrera</th>
+                <th>Generación</th>
+                <th>Estatus</th>
+            </tr>
+            {% for e in egresados %}
+            <tr>
+                <td>{{ e.matricula }}</td>
+                <td>{{ e.nombre_completo }}</td>
+                <td>{{ e.carrera }}</td>
+                <td>{{ e.generacion }}</td>
+                <td>{{ e.estatus }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <p>No hay ningún registro aún.</p>
+        {% endif %}
+
+        <br>
+        <a href="{{ url_for('dashboard') }}">Volver</a>
+    </div>
+</body>
+</html>
