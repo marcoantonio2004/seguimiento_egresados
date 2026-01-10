@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from db import get_connection
 from functools import wraps
 import psycopg2.extras
@@ -36,30 +36,59 @@ def listar_egresados():
 @egresados_bp.route("/egresados/registrar", methods=["GET", "POST"])
 @login_required
 def registrar_egresado():
-    if request.method == "POST":
-        conn = get_connection()
-        cur = conn.cursor()
-        cur.execute("""
-            INSERT INTO egresados
-            (matricula, nombre_completo, carrera, generacion, estatus,
-             domicilio, genero, telefono, correo)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        """, (
-            request.form["matricula"],
-            request.form["nombre"],
-            request.form["carrera"],
-            request.form["generacion"],
-            request.form["estatus"],
-            request.form["domicilio"],
-            request.form["genero"],
-            request.form["telefono"],
-            request.form["correo"]
-        ))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return redirect(url_for("egresados.listar_egresados"))
-    return render_template("registrar_egresado.html")
+
+    # 👉 GET: solo mostrar formulario
+    if request.method == "GET":
+        return render_template(
+            "registrar_egresado.html",
+            registrado=False
+        )
+
+    # 👉 POST: guardar egresado
+    matricula = request.form["matricula"].strip()
+
+    # Validación matrícula
+    if not matricula.isdigit() or len(matricula) != 8:
+        flash("La matrícula debe tener exactamente 8 dígitos.", "error")
+        return redirect(url_for("egresados.registrar_egresado"))
+
+    # Generación "OTRA"
+    generacion = request.form["generacion"]
+    if generacion == "OTRA":
+        generacion = request.form.get("otra_generacion", "").strip()
+        if not generacion:
+            flash("Debe especificar la generación.", "error")
+            return redirect(url_for("egresados.registrar_egresado"))
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO egresados
+        (matricula, nombre_completo, carrera, generacion, estatus,
+         domicilio, genero, telefono, correo)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """, (
+        matricula,
+        request.form["nombre"],
+        request.form["carrera"],
+        generacion,
+        request.form["estatus"],
+        request.form.get("domicilio"),
+        request.form.get("genero"),
+        request.form.get("telefono"),
+        request.form.get("correo")
+    ))
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    # 👉 MOSTRAR FORMULARIO CON MENSAJE DE ÉXITO
+    return render_template(
+        "registrar_egresado.html",
+        registrado=True
+    )
 
 # =========================
 # EDITAR EGRESADO
@@ -71,6 +100,11 @@ def editar_egresado(id):
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if request.method == "POST":
+
+        generacion = request.form["generacion"]
+        if generacion == "OTRA":
+            generacion = request.form.get("otra_generacion", "").strip()
+
         cur.execute("""
             UPDATE egresados
             SET matricula = %s,
@@ -87,24 +121,26 @@ def editar_egresado(id):
             request.form["matricula"],
             request.form["nombre"],
             request.form["carrera"],
-            request.form["generacion"],
+            generacion,
             request.form["estatus"],
-            request.form["domicilio"],
-            request.form["genero"],
-            request.form["telefono"],
-            request.form["correo"],
+            request.form.get("domicilio"),
+            request.form.get("genero"),
+            request.form.get("telefono"),
+            request.form.get("correo"),
             id
         ))
+
         conn.commit()
         cur.close()
         conn.close()
         return redirect(url_for("egresados.listar_egresados"))
 
-    # GET: obtener datos existentes
+    # GET
     cur.execute("SELECT * FROM egresados WHERE id = %s", (id,))
     egresado = cur.fetchone()
     cur.close()
     conn.close()
+
     return render_template("editar_egresado.html", egresado=egresado)
 
 # =========================

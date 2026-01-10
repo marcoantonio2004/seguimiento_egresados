@@ -3,59 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <title>Registrar Egresado</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h2>Registrar Egresado</h2>
 
+<div class="form-page">
+    <div class="form-card">
+
+        <h2>Registrar Egresado</h2>
+        <p class="form-subtitle">
+            Los campos marcados con <span>*</span> son obligatorios
+        </p>
+
+        <!-- ===================== -->
+        <!-- FORMULARIO -->
+        <!-- ===================== -->
+        {% if not registrado %}
         <form method="POST">
 
-            <label for="matricula">Matrícula:</label>
-            <input type="text" id="matricula" name="matricula" required>
+            <!-- INFORMACIÓN ACADÉMICA -->
+            <h3>📄 Información académica</h3>
 
-            <label for="nombre">Nombre completo:</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="matricula">Matrícula <span>*</span></label>
+                    <input
+                        type="text"
+                        id="matricula"
+                        name="matricula"
+                        required
+                        maxlength="8"
+                        minlength="8"
+                        inputmode="numeric"
+                        pattern="[0-9]{8}"
+                        placeholder="8 dígitos numéricos">
+                </div>
 
-            <label for="carrera">Carrera:</label>
-            <select id="carrera" name="carrera" required>
-                <option value="">Seleccione carrera</option>
-                <option>Ingeniería en Innovación Agrícola Sustentable</option>
-                <option>Ingeniería en Sistemas Computacionales</option>
-                <option>Licenciatura en Contaduría</option>
-            </select>
+                <div class="form-group">
+                    <label for="carrera">Carrera <span>*</span></label>
+                    <select id="carrera" name="carrera" required>
+                        <option value="">Seleccione carrera</option>
+                        <option>Ingeniería en Innovación Agrícola Sustentable</option>
+                        <option>Ingeniería en Sistemas Computacionales</option>
+                        <option>Licenciatura en Contaduría</option>
+                    </select>
+                </div>
 
-            <label for="generacion">Generación:</label>
-            <input type="text" id="generacion" name="generacion" placeholder="2014-2019" required>
+                <div class="form-group">
+                    <label for="estatus">Estatus <span>*</span></label>
+                    <select id="estatus" name="estatus" required>
+                        <option>Egresado</option>
+                        <option>En seguimiento</option>
+                        <option>Titulado</option>
+                    </select>
+                </div>
 
-            <label for="estatus">Estatus:</label>
-            <select id="estatus" name="estatus" required>
-                <option>Egresado</option>
-                <option>En seguimiento</option>
-                <option>Titulado</option>
-            </select>
+                <div class="form-group">
+                    <label for="generacion">Generación <span>*</span></label>
+                    <select id="generacion" name="generacion" required>
+                        <option value="">Seleccione generación</option>
+                        <option>2007-2012</option>
+                        <option>2008-2013</option>
+                        <option>2009-2014</option>
+                        <option>2010-2015</option>
+                        <option>2011-2016</option>
+                        <option>2012-2017</option>
+                        <option>2013-2018</option>
+                        <option>2014-2019</option>
+                        <option>2015-2020</option>
+                        <option>2016-2021</option>
+                        <option>2017-2022</option>
+                        <option>2018-2023</option>
+                        <option>2019-2024</option>
+                        <option>2020-2025</option>
+                        <option value="OTRA">Otra</option>
+                    </select>
+                </div>
 
-            <label for="domicilio">Domicilio:</label>
-            <input type="text" id="domicilio" name="domicilio">
+                <div class="form-group hidden" id="otraGeneracionGroup">
+                    <label for="otra_generacion">Especifique la generación <span>*</span></label>
+                    <input
+                        type="text"
+                        id="otra_generacion"
+                        name="otra_generacion"
+                        placeholder="Ej: 2021-2026">
+                </div>
+            </div>
 
-            <label for="genero">Género:</label>
-            <select id="genero" name="genero">
-                <option>Masculino</option>
-                <option>Femenino</option>
-            </select>
+            <!-- INFORMACIÓN PERSONAL -->
+            <h3>👤 Información personal</h3>
 
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" name="telefono">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nombre">Nombre completo <span>*</span></label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
 
-            <label for="correo">Correo electrónico:</label>
-            <input type="email" id="correo" name="correo">
+                <div class="form-group">
+                    <label for="genero">Género</label>
+                    <select id="genero" name="genero">
+                        <option>Masculino</option>
+                        <option>Femenino</option>
+                    </select>
+                </div>
 
-            <button type="submit">Guardar</button>
+                <div class="form-group full-width">
+                    <label for="domicilio">Domicilio</label>
+                    <input type="text" id="domicilio" name="domicilio">
+                </div>
+            </div>
+
+            <!-- CONTACTO -->
+            <h3>📞 Información de contacto</h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input
+                        type="tel"
+                        id="telefono"
+                        name="telefono"
+                        maxlength="10"
+                        placeholder="Ej: 9611234567">
+                </div>
+
+                <div class="form-group">
+                    <label for="correo">Correo electrónico</label>
+                    <input
+                        type="email"
+                        id="correo"
+                        name="correo"
+                        placeholder="nombre@correo.com">
+                </div>
+            </div>
+
+            <!-- BOTONES -->
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Guardar egresado</button>
+                <a href="{{ url_for('dashboard') }}" class="btn-secondary">Cancelar</a>
+            </div>
+
         </form>
+        {% endif %}
 
-        <br>
-        <a href="{{ url_for('dashboard') }}">Cancelar</a>
+        <!-- ===================== -->
+        <!-- MENSAJE REGISTRO EXITOSO -->
+        <!-- ===================== -->
+        {% if registrado %}
+        <div class="registro-exito">
+
+            <p>✅ El egresado fue registrado correctamente.</p>
+            <p>¿Qué deseas hacer ahora?</p>
+
+            <div class="acciones">
+                <a href="{{ url_for('egresados.registrar_egresado') }}" class="btn-primary">
+                    Nuevo registro
+                </a>
+
+                <a href="{{ url_for('egresados.listar_egresados') }}" class="btn-secondary">
+                    Ver egresados
+                </a>
+
+                <a href="{{ url_for('dashboard') }}" class="btn-secondary">
+                    Volver al inicio
+                </a>
+            </div>
+
+        </div>
+        {% endif %}
+
     </div>
+</div>
+
+<!-- ===================== -->
+<!-- SCRIPTS -->
+<!-- ===================== -->
+<script>
+    const generacionSelect = document.getElementById('generacion');
+    const otraGeneracionGroup = document.getElementById('otraGeneracionGroup');
+    const otraGeneracionInput = document.getElementById('otra_generacion');
+
+    if (generacionSelect) {
+        generacionSelect.addEventListener('change', () => {
+            if (generacionSelect.value === 'OTRA') {
+                otraGeneracionGroup.classList.remove('hidden');
+                otraGeneracionInput.required = true;
+            } else {
+                otraGeneracionGroup.classList.add('hidden');
+                otraGeneracionInput.required = false;
+                otraGeneracionInput.value = '';
+            }
+        });
+    }
+
+    const matriculaInput = document.getElementById('matricula');
+    if (matriculaInput) {
+        matriculaInput.addEventListener('input', () => {
+            matriculaInput.value = matriculaInput.value.replace(/\D/g, '').slice(0, 8);
+        });
+    }
+</script>
+
 </body>
 </html>
