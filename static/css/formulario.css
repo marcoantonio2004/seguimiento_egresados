@@ -234,3 +234,17 @@ form select:focus {
     text-decoration: none; /* importante para links */
 }
 
+.alert {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.alert-error {
+    background-color: #ffe5e5;
+    color: #a10000;
+    border: 1px solid #ffb3b3;
+}
+
+

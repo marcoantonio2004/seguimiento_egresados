@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from db import get_connection
 from functools import wraps
 import psycopg2.extras
+from psycopg2 import errors
+
 
 egresados_bp = Blueprint("egresados", __name__)
 
@@ -37,14 +39,9 @@ def listar_egresados():
 @login_required
 def registrar_egresado():
 
-    # 👉 GET: solo mostrar formulario
     if request.method == "GET":
-        return render_template(
-            "registrar_egresado.html",
-            registrado=False
-        )
+        return render_template("registrar_egresado.html", registrado=False)
 
-    # 👉 POST: guardar egresado
     matricula = request.form["matricula"].strip()
 
     # Validación matrícula
@@ -52,7 +49,7 @@ def registrar_egresado():
         flash("La matrícula debe tener exactamente 8 dígitos.", "error")
         return redirect(url_for("egresados.registrar_egresado"))
 
-    # Generación "OTRA"
+    # Generación OTRA
     generacion = request.form["generacion"]
     if generacion == "OTRA":
         generacion = request.form.get("otra_generacion", "").strip()
@@ -63,32 +60,36 @@ def registrar_egresado():
     conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute("""
-        INSERT INTO egresados
-        (matricula, nombre_completo, carrera, generacion, estatus,
-         domicilio, genero, telefono, correo)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-    """, (
-        matricula,
-        request.form["nombre"],
-        request.form["carrera"],
-        generacion,
-        request.form["estatus"],
-        request.form.get("domicilio"),
-        request.form.get("genero"),
-        request.form.get("telefono"),
-        request.form.get("correo")
-    ))
+    try:
+        cur.execute("""
+            INSERT INTO egresados
+            (matricula, nombre_completo, carrera, generacion, estatus,
+             domicilio, genero, telefono, correo)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """, (
+            matricula,
+            request.form["nombre"],
+            request.form["carrera"],
+            generacion,
+            request.form["estatus"],
+            request.form.get("domicilio"),
+            request.form.get("genero"),
+            request.form.get("telefono"),
+            request.form.get("correo")
+        ))
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        conn.commit()
 
-    # 👉 MOSTRAR FORMULARIO CON MENSAJE DE ÉXITO
-    return render_template(
-        "registrar_egresado.html",
-        registrado=True
-    )
+    except errors.UniqueViolation:
+        conn.rollback()
+        flash("⚠️ La matrícula ya ha sido registrada.", "error")
+        return redirect(url_for("egresados.registrar_egresado"))
+
+    finally:
+        cur.close()
+        conn.close()
+
+    return render_template("registrar_egresado.html", registrado=True)
 
 # =========================
 # EDITAR EGRESADO

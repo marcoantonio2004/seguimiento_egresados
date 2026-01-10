@@ -22,7 +22,21 @@
         <!-- ===================== -->
         <!-- FORMULARIO -->
         <!-- ===================== -->
-        {% if not registrado %}
+         {% if not registrado %}
+
+        <!-- ===================== -->
+        <!-- MENSAJES DE ALERTA -->
+        <!-- ===================== -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
         <form method="POST">
 
             <!-- INFORMACIÓN ACADÉMICA -->
@@ -175,6 +189,8 @@
 
         </div>
         {% endif %}
+
+
 
     </div>
 </div>
