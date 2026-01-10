@@ -1,9 +1,21 @@
+/* ============================== */
 /* TABLA DE EGRESADOS */
+/* ============================== */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+/* ACCIONES */
 .acciones {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
+/* BOTONES */
 .btn-editar {
     background-color: #ffc107;
     color: #000;
@@ -19,15 +31,62 @@
 
 .btn-eliminar {
     background-color: #dc3545;
-    color: white;
+    color: #fff;
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 14px;
-    border: none;
-    cursor: pointer;
     transition: 0.3s;
 }
 
 .btn-eliminar:hover {
     background-color: #b02a37;
 }
+
+/* BADGES */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+
+    white-space: nowrap;     /* 🔑 evita que el texto se parta */
+    text-align: center;
+}
+
+
+.badge.egresado {
+    background-color: #6c757d;
+}
+
+.badge.en-seguimiento {
+    background-color: #0d6efd;
+}
+
+.badge.titulado {
+    background-color: #198754;
+}
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .acciones a {
+        width: 100%;
+        text-align: center;
+    }
+    .badge {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+}
+

@@ -32,13 +32,14 @@ body {
 /* ============================== */
 /* CONTENEDOR GENERAL */
 .container {
-    flex: 1;
-    margin: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
     padding: 25px;
     background: var(--gris-card);
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
 
 /* ============================== */
 /* TITULOS */
@@ -113,6 +114,15 @@ td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
+
+tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
 
 /* ============================== */
 /* RESPONSIVE */

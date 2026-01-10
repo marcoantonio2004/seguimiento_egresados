@@ -4,43 +4,72 @@
     <meta charset="UTF-8">
     <title>Listado de Egresados</title>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/egresados.css') }}">
 </head>
 <body>
+
     <div class="container">
+
         <h2>Egresados Registrados</h2>
 
         {% if egresados %}
-        <table>
-            <tr>
-                <th>Matrícula</th>
-                <th>Nombre</th>
-                <th>Carrera</th>
-                <th>Generación</th>
-                <th>Estatus</th>
-                <th>Acciones</th>
-            </tr>
-            {% for e in egresados %}
-            <tr>
-                <td>{{ e.matricula }}</td>
-                <td>{{ e.nombre_completo }}</td>
-                <td>{{ e.carrera }}</td>
-                <td>{{ e.generacion }}</td>
-                <td>{{ e.estatus }}</td>
-                <td>
-                    <a href="{{ url_for('egresados.editar_egresado', id=e.id) }}" class="btn-editar">Editar</a>
-                    <a href="{{ url_for('egresados.eliminar_egresado', id=e.id) }}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este egresado?');">Eliminar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Nombre</th>
+                        <th>Carrera</th>
+                        <th>Generación</th>
+                        <th>Estatus</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in egresados %}
+                    <tr>
+                        <td>{{ e.matricula }}</td>
+                        <td>{{ e.nombre_completo }}</td>
+                        <td>{{ e.carrera }}</td>
+                        <td>{{ e.generacion }}</td>
+                        <td>
+                            <span class="badge {{ e.estatus | lower | replace(' ', '-') }}">
+                                {{ e.estatus }}
+                            </span>
+                        </td>
+                        <td class="acciones">
+                            <a href="{{ url_for('egresados.editar_egresado', id=e.id) }}" class="btn-editar">
+                                Editar
+                            </a>
+                            <a href="{{ url_for('egresados.eliminar_egresado', id=e.id) }}"
+                               class="btn-eliminar"
+                               onclick="return confirm('¿Estás seguro de eliminar este egresado?');">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
         {% else %}
-            <p>No hay ningún registro aún.</p>
+        <div class="empty-state">
+            <p>📭 No hay ningún egresado registrado aún.</p>
+            <a href="{{ url_for('egresados.registrar_egresado') }}" class="btn">
+                Registrar primer egresado
+            </a>
+        </div>
         {% endif %}
 
         <br>
         <a href="{{ url_for('dashboard') }}">Volver</a>
+
     </div>
+
 </body>
 </html>
