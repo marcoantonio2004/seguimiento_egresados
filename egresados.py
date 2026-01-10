@@ -1,9 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, send_file
 from db import get_connection
 from functools import wraps
 import psycopg2.extras
 from psycopg2 import errors
-
+from io import BytesIO
+import openpyxl
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 egresados_bp = Blueprint("egresados", __name__)
 
@@ -24,13 +27,52 @@ def login_required(f):
 @egresados_bp.route("/egresados")
 @login_required
 def listar_egresados():
+    q = request.args.get("q", "").strip()
+    carrera = request.args.get("carrera", "")
+    estatus = request.args.get("estatus", "")
+
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute("SELECT * FROM egresados ORDER BY id DESC")
+
+    query = "SELECT * FROM egresados WHERE 1=1"
+    params = []
+
+    if q:
+        query += " AND (matricula ILIKE %s OR nombre_completo ILIKE %s)"
+        params.extend([f"%{q}%", f"%{q}%"])
+
+    if carrera:
+        query += " AND carrera = %s"
+        params.append(carrera)
+
+    if estatus:
+        query += " AND estatus = %s"
+        params.append(estatus)
+
+    query += " ORDER BY id DESC"
+
+    cur.execute(query, params)
     egresados = cur.fetchall()
+
+    # Para los selects
+    cur.execute("SELECT DISTINCT carrera FROM egresados ORDER BY carrera")
+    carreras = [c[0] for c in cur.fetchall()]
+
+    cur.execute("SELECT DISTINCT estatus FROM egresados ORDER BY estatus")
+    estatuses = [e[0] for e in cur.fetchall()]
+
     cur.close()
     conn.close()
-    return render_template("egresados.html", egresados=egresados)
+
+    return render_template(
+        "egresados.html",
+        egresados=egresados,
+        carreras=carreras,
+        estatuses=estatuses,
+        q=q,
+        carrera_sel=carrera,
+        estatus_sel=estatus
+    )
 
 # =========================
 # REGISTRAR EGRESADO
@@ -157,3 +199,143 @@ def eliminar_egresado(id):
     cur.close()
     conn.close()
     return redirect(url_for("egresados.listar_egresados"))
+
+@egresados_bp.route("/egresados/exportar/excel")
+@login_required
+def exportar_excel():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            matricula,
+            nombre_completo,
+            carrera,
+            generacion,
+            estatus,
+            domicilio,
+            genero,
+            telefono,
+            correo,
+            fecha_registro
+        FROM egresados
+        ORDER BY id
+    """)
+    datos = cur.fetchall()
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Egresados"
+
+    encabezados = [
+        "Matrícula", "Nombre Completo", "Carrera", "Generación",
+        "Estatus", "Domicilio", "Género", "Teléfono",
+        "Correo", "Fecha de Registro"
+    ]
+
+    ws.append(encabezados)
+
+    # 🎨 Estilo encabezados
+    from openpyxl.styles import Font, PatternFill, Border, Side
+
+    header_font = Font(bold=True, color="FFFFFF")
+    header_fill = PatternFill("solid", fgColor="0B3D1E")
+    border = Border(
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin")
+    )
+
+    for col in range(1, len(encabezados) + 1):
+        cell = ws.cell(row=1, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.border = border
+
+    # 📄 Datos
+    for fila in datos:
+        ws.append(fila)
+
+    # 📐 Ajustar ancho de columnas
+    for column_cells in ws.columns:
+        length = max(len(str(cell.value)) if cell.value else 0 for cell in column_cells)
+        ws.column_dimensions[column_cells[0].column_letter].width = length + 2
+
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+
+    cur.close()
+    conn.close()
+
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name="egresados_completo.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+@egresados_bp.route("/egresados/exportar/pdf")
+@login_required
+def exportar_pdf():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            matricula,
+            nombre_completo,
+            carrera,
+            generacion,
+            estatus,
+            telefono,
+            correo
+        FROM egresados
+        ORDER BY id
+    """)
+    datos = cur.fetchall()
+
+    buffer = BytesIO()
+    pdf = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+
+    # 🧾 Título
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawCentredString(width / 2, height - 40, "Reporte General de Egresados")
+
+    y = height - 80
+
+    pdf.setFont("Helvetica-Bold", 10)
+    encabezados = ["Matrícula", "Nombre", "Carrera", "Generación", "Estatus", "Teléfono", "Correo"]
+
+    x_positions = [40, 90, 210, 330, 420, 490, 560]
+
+    for i, h in enumerate(encabezados):
+        pdf.drawString(x_positions[i], y, h)
+
+    y -= 20
+    pdf.setFont("Helvetica", 9)
+
+    for fila in datos:
+        for i, valor in enumerate(fila):
+            pdf.drawString(x_positions[i], y, str(valor))
+        y -= 15
+
+        if y < 50:
+            pdf.showPage()
+            pdf.setFont("Helvetica", 9)
+            y = height - 50
+
+    pdf.save()
+    buffer.seek(0)
+
+    cur.close()
+    conn.close()
+
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name="egresados_completo.pdf",
+        mimetype="application/pdf"
+    )

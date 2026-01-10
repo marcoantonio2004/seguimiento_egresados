@@ -11,6 +11,48 @@
 </head>
 <body>
 
+<div class="container egresados-page">
+
+    <!-- =======================
+         TOOLBAR
+    ======================== -->
+    <div class="toolbar">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍 Buscar por matrícula, nombre o generación"
+            class="search-input"
+        >
+
+        <select id="filtroCarrera">
+            <option value="">Todas las carreras</option>
+            <option>Ingeniería en Innovación Agrícola Sustentable</option>
+            <option>Ingeniería en Sistemas Computacionales</option>
+            <option>Licenciatura en Contaduría</option>
+        </select>
+
+        <select id="filtroEstatus">
+            <option value="">Todos los estatus</option>
+            <option>Egresado</option>
+            <option>En seguimiento</option>
+            <option>Titulado</option>
+        </select>
+
+        <div class="export-buttons">
+            <!-- Exportan TODOS los datos desde backend -->
+            <a href="{{ url_for('egresados.exportar_excel') }}" class="btn btn-excel">
+                📊 Exportar Excel
+            </a>
+            <a href="{{ url_for('egresados.exportar_pdf') }}" class="btn btn-pdf">
+                📄 Exportar PDF
+            </a>
+        </div>
+    </div>
+
+    <!-- =======================
+         CONTENIDO
+    ======================== -->
     <div class="container">
 
         <h2>Egresados Registrados</h2>
@@ -18,7 +60,7 @@
         {% if egresados %}
 
         <div class="table-responsive">
-            <table>
+            <table class="egresados-table">
                 <thead>
                     <tr>
                         <th>Matrícula</th>
@@ -31,7 +73,13 @@
                 </thead>
                 <tbody>
                     {% for e in egresados %}
-                    <tr>
+                    <tr
+                        data-matricula="{{ e.matricula | lower }}"
+                        data-nombre="{{ e.nombre_completo | lower }}"
+                        data-carrera="{{ e.carrera | lower }}"
+                        data-generacion="{{ e.generacion | lower }}"
+                        data-estatus="{{ e.estatus | lower }}"
+                    >
                         <td>{{ e.matricula }}</td>
                         <td>{{ e.nombre_completo }}</td>
                         <td>{{ e.carrera }}</td>
@@ -42,7 +90,8 @@
                             </span>
                         </td>
                         <td class="acciones">
-                            <a href="{{ url_for('egresados.editar_egresado', id=e.id) }}" class="btn-editar">
+                            <a href="{{ url_for('egresados.editar_egresado', id=e.id) }}"
+                               class="btn-editar">
                                 Editar
                             </a>
                             <a href="{{ url_for('egresados.eliminar_egresado', id=e.id) }}"
@@ -67,9 +116,55 @@
         {% endif %}
 
         <br>
-        <a href="{{ url_for('dashboard') }}">Volver</a>
+        <a href="{{ url_for('dashboard') }}">⬅ Volver al panel</a>
 
     </div>
+</div>
+
+<!-- =======================
+     FILTROS INTELIGENTES
+======================== -->
+<script>
+    const searchInput = document.getElementById("searchInput");
+    const filtroCarrera = document.getElementById("filtroCarrera");
+    const filtroEstatus = document.getElementById("filtroEstatus");
+    const filas = document.querySelectorAll("tbody tr");
+
+    function filtrarTabla() {
+        const texto = searchInput.value.toLowerCase().trim();
+        const carrera = filtroCarrera.value.toLowerCase();
+        const estatus = filtroEstatus.value.toLowerCase();
+
+        filas.forEach(fila => {
+            const matricula = fila.dataset.matricula;
+            const nombre = fila.dataset.nombre;
+            const filaCarrera = fila.dataset.carrera;
+            const generacion = fila.dataset.generacion;
+            const filaEstatus = fila.dataset.estatus;
+
+            const coincideTexto =
+                !texto ||
+                matricula.includes(texto) ||
+                nombre.includes(texto) ||
+                generacion.includes(texto);
+
+            const coincideCarrera =
+                !carrera || filaCarrera === carrera;
+
+            const coincideEstatus =
+                !estatus || filaEstatus === estatus;
+
+            fila.style.display =
+                coincideTexto && coincideCarrera && coincideEstatus
+                    ? ""
+                    : "none";
+        });
+    }
+
+    searchInput.addEventListener("input", filtrarTabla);
+    filtroCarrera.addEventListener("change", filtrarTabla);
+    filtroEstatus.addEventListener("change", filtrarTabla);
+</script>
 
 </body>
 </html>
