@@ -44,6 +44,44 @@ body {
 }
 
 /* ============================== */
+/* ALERTA DE ERROR */
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-error {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+}
+
+.alert svg {
+    flex-shrink: 0;
+}
+
+.alert span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ============================== */
 /* FORMULARIOS */
 form label {
     display: block;
@@ -122,5 +160,10 @@ form button:hover {
 
     form button {
         padding: 10px;
+    }
+    
+    .alert {
+        padding: 10px 12px;
+        font-size: 13px;
     }
 }
