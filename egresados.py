@@ -300,6 +300,14 @@ def exportar_excel():
 @egresados_bp.route("/egresados/exportar/pdf")
 @login_required
 def exportar_pdf():
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import letter, landscape
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT
+    from datetime import datetime
+    
     conn = get_connection()
     cur = conn.cursor()
 
@@ -313,50 +321,171 @@ def exportar_pdf():
             telefono,
             correo
         FROM egresados
-        ORDER BY id
+        ORDER BY carrera, nombre_completo
     """)
     datos = cur.fetchall()
-
-    buffer = BytesIO()
-    pdf = canvas.Canvas(buffer, pagesize=letter)
-    width, height = letter
-
-    # 🧾 Título
-    pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawCentredString(width / 2, height - 40, "Reporte General de Egresados")
-
-    y = height - 80
-
-    pdf.setFont("Helvetica-Bold", 10)
-    encabezados = ["Matrícula", "Nombre", "Carrera", "Generación", "Estatus", "Teléfono", "Correo"]
-
-    x_positions = [40, 90, 210, 330, 420, 490, 560]
-
-    for i, h in enumerate(encabezados):
-        pdf.drawString(x_positions[i], y, h)
-
-    y -= 20
-    pdf.setFont("Helvetica", 9)
-
-    for fila in datos:
-        for i, valor in enumerate(fila):
-            pdf.drawString(x_positions[i], y, str(valor))
-        y -= 15
-
-        if y < 50:
-            pdf.showPage()
-            pdf.setFont("Helvetica", 9)
-            y = height - 50
-
-    pdf.save()
-    buffer.seek(0)
-
+    
     cur.close()
     conn.close()
+
+    buffer = BytesIO()
+    
+    # Usar formato horizontal para más espacio
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=landscape(letter),
+        rightMargin=30,
+        leftMargin=30,
+        topMargin=40,
+        bottomMargin=30
+    )
+    
+    # Estilos
+    styles = getSampleStyleSheet()
+    
+    # Estilo para el título
+    titulo_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=18,
+        textColor=colors.HexColor('#0B3D1E'),
+        spaceAfter=8,
+        alignment=TA_CENTER,
+        fontName='Helvetica-Bold'
+    )
+    
+    # Estilo para subtítulo
+    subtitulo_style = ParagraphStyle(
+        'Subtitle',
+        parent=styles['Normal'],
+        fontSize=10,
+        textColor=colors.grey,
+        alignment=TA_CENTER,
+        spaceAfter=20
+    )
+    
+    # Contenido del documento
+    elementos = []
+    
+    # Título
+    titulo = Paragraph("Reporte General de Egresados", titulo_style)
+    elementos.append(titulo)
+    
+    # Fecha de generación
+    fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
+    subtitulo = Paragraph(f"Generado el: {fecha_actual} | Total de registros: {len(datos)}", subtitulo_style)
+    elementos.append(subtitulo)
+    
+    # Preparar datos para la tabla
+    encabezados = [
+        ['Matrícula', 'Nombre Completo', 'Carrera', 'Generación', 
+         'Estatus', 'Teléfono', 'Correo']
+    ]
+    
+    # Formatear datos con Paragraph para permitir saltos de línea
+    datos_tabla = []
+    normal_style = ParagraphStyle(
+        'CeldaNormal',
+        parent=styles['Normal'],
+        fontSize=8,
+        leading=10,
+        alignment=TA_LEFT,
+        wordWrap='CJK'
+    )
+    
+    for fila in datos:
+        fila_formateada = []
+        for i, valor in enumerate(fila):
+            texto = str(valor) if valor else 'N/A'
+            
+            # Columna de carrera (índice 2) - usar Paragraph para saltos automáticos
+            if i == 2:
+                fila_formateada.append(Paragraph(texto, normal_style))
+            # Columnas de nombre y correo también pueden ser largas
+            elif i in [1, 6]:
+                if len(texto) > 25:
+                    fila_formateada.append(Paragraph(texto, normal_style))
+                else:
+                    fila_formateada.append(texto)
+            else:
+                # Limitar otras columnas
+                if len(texto) > 15:
+                    texto = texto[:12] + '...'
+                fila_formateada.append(texto)
+        
+        datos_tabla.append(fila_formateada)
+    
+    # Combinar encabezados y datos
+    tabla_completa = encabezados + datos_tabla
+    
+    # Crear tabla con anchos de columna optimizados
+    tabla = Table(tabla_completa, colWidths=[
+        0.8*inch,   # Matrícula
+        1.8*inch,   # Nombre
+        1.5*inch,   # Carrera
+        0.9*inch,   # Generación
+        0.9*inch,   # Estatus
+        1.0*inch,   # Teléfono
+        1.8*inch    # Correo
+    ])
+    
+    # Estilo de la tabla
+    estilo_tabla = TableStyle([
+        # Encabezado
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0B3D1E')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('TOPPADDING', (0, 0), (-1, 0), 12),
+        
+        # Datos
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('ALIGN', (0, 1), (0, -1), 'CENTER'),  # Matrícula centrada
+        ('ALIGN', (1, 1), (-1, -1), 'LEFT'),   # Resto a la izquierda
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 8),
+        ('TOPPADDING', (0, 1), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
+        
+        # Bordes
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('LINEBELOW', (0, 0), (-1, 0), 2, colors.HexColor('#0B3D1E')),
+        
+        # Filas alternadas
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#F5F5F5')]),
+        
+        # Ajuste de texto
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ])
+    
+    tabla.setStyle(estilo_tabla)
+    elementos.append(tabla)
+    
+    # Pie de página con info adicional
+    elementos.append(Spacer(1, 0.3*inch))
+    pie_style = ParagraphStyle(
+        'Footer',
+        parent=styles['Normal'],
+        fontSize=8,
+        textColor=colors.grey,
+        alignment=TA_CENTER
+    )
+    pie = Paragraph(
+        "Este documento es un reporte automatizado del sistema de gestión de egresados",
+        pie_style
+    )
+    elementos.append(pie)
+    
+    # Construir PDF
+    doc.build(elementos)
+    buffer.seek(0)
 
     return send_file(
         buffer,
         as_attachment=True,
-        download_name="egresados_completo.pdf",
+        download_name=f"egresados_reporte_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
         mimetype="application/pdf"
     )
