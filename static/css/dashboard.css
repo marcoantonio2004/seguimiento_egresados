@@ -21,12 +21,34 @@
     transition: transform 0.3s ease;
 }
 
-/* Baja el título para que no lo tape el botón */
-.sidebar-title {
+/* ============================== */
+/* LOGO */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.sidebar-logo {
+    max-width: 120px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-logo:hover {
+    transform: scale(1.05);
+}
+
+/* ============================== */
+/* TÍTULO */
+.sidebar-title {
+    margin-top: 0;
     margin-bottom: 25px;
     color: var(--verde-oscuro);
     font-size: 1.3rem;
+    text-align: center;
 }
 
 /* ============================== */
@@ -153,6 +175,10 @@
 
     .toggle-btn:hover {
         background: var(--verde-oscuro);
+    }
+
+    .sidebar-logo {
+        max-width: 100px;
     }
 }
 
