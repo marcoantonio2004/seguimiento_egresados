@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Egresado</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ver_egresado.css') }}">
+</head>
+<body>
+
+<div class="view-page">
+    <div class="view-card">
+
+        <div class="view-header">
+            <h2>📋 Información del Egresado</h2>
+            <p class="view-subtitle">
+                Datos completos del registro
+            </p>
+        </div>
+
+        <!-- INFORMACIÓN ACADÉMICA -->
+        <div class="info-section">
+            <h3 class="section-title">📄 Información académica</h3>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Matrícula:</span>
+                    <span class="info-value">{{ egresado.matricula }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Carrera:</span>
+                    <span class="info-value">{{ egresado.carrera }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Generación:</span>
+                    <span class="info-value">{{ egresado.generacion }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Estatus:</span>
+                    <span class="info-value">
+                        <span class="badge-status {{ egresado.estatus | lower | replace(' ', '-') }}">
+                            {{ egresado.estatus }}
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFORMACIÓN PERSONAL -->
+        <div class="info-section">
+            <h3 class="section-title">👤 Información personal</h3>
+            
+            <div class="info-grid">
+                <div class="info-item full-width">
+                    <span class="info-label">Nombre completo:</span>
+                    <span class="info-value">{{ egresado.nombre_completo }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Género:</span>
+                    <span class="info-value">{{ egresado.genero or 'No especificado' }}</span>
+                </div>
+
+                <div class="info-item full-width">
+                    <span class="info-label">Domicilio:</span>
+                    <span class="info-value">{{ egresado.domicilio or 'No especificado' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <div class="info-section">
+            <h3 class="section-title">📞 Información de contacto</h3>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Teléfono:</span>
+                    <span class="info-value">{{ egresado.telefono or 'No especificado' }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Correo electrónico:</span>
+                    <span class="info-value">{{ egresado.correo or 'No especificado' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFORMACIÓN DEL SISTEMA -->
+        <div class="info-section">
+            <h3 class="section-title">⚙️ Información del sistema</h3>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Fecha de registro:</span>
+                    <span class="info-value">{{ egresado.fecha_registro }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">ID del registro:</span>
+                    <span class="info-value">{{ egresado.id }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="action-buttons">
+            <a href="{{ url_for('egresados.editar_egresado', id=egresado.id) }}" class="btn-edit">
+                ✏️ Editar información
+            </a>
+            <a href="{{ url_for('egresados.listar_egresados') }}" class="btn-back">
+                ⬅ Volver al listado
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

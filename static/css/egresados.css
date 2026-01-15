@@ -14,38 +14,79 @@
 
 .egresados-page .acciones {
     display: flex;
+    flex-direction: column;
     gap: 8px;
-    flex-wrap: wrap;
+    align-items: flex-start;
 }
 
 /* ============================== */
 /* BOTONES DE ACCIONES */
 /* ============================== */
 
+/* Botón Visualizar - AZUL */
+.egresados-page .btn-visualizar {
+    background-color: #2196F3;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.egresados-page .btn-visualizar:hover {
+    background-color: #0b7dda;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+/* Botón Editar - AMARILLO */
 .egresados-page .btn-editar {
     background-color: #ffc107;
     color: #000;
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 14px;
-    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
 }
 
 .egresados-page .btn-editar:hover {
     background-color: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
 }
 
+/* Botón Eliminar - ROJO */
 .egresados-page .btn-eliminar {
     background-color: #dc3545;
     color: #fff;
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 14px;
-    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
 }
 
 .egresados-page .btn-eliminar:hover {
     background-color: #b02a37;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
 }
 
 /* ============================== */

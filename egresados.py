@@ -75,6 +75,27 @@ def listar_egresados():
     )
 
 # =========================
+# VER EGRESADO (NUEVA RUTA)
+# =========================
+@egresados_bp.route("/egresados/ver/<int:id>")
+@login_required
+def ver_egresado(id):
+    conn = get_connection()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    cur.execute("SELECT * FROM egresados WHERE id = %s", (id,))
+    egresado = cur.fetchone()
+    
+    cur.close()
+    conn.close()
+    
+    if not egresado:
+        flash("Egresado no encontrado.", "error")
+        return redirect(url_for("egresados.listar_egresados"))
+    
+    return render_template("ver_egresado.html", egresado=egresado)
+
+# =========================
 # REGISTRAR EGRESADO
 # =========================
 @egresados_bp.route("/egresados/registrar", methods=["GET", "POST"])

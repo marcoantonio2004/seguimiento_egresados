@@ -1,0 +1,499 @@
+/* ========================================
+   PÁGINA DE VISUALIZACIÓN DE EGRESADO
+   Estos estilos tienen prioridad sobre styles.css
+======================================== */
+
+/* Reset específico para esta página */
+.view-page * {
+    box-sizing: border-box;
+}
+
+.view-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0B3D1E 0%, #1a5c33 100%);
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.view-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    max-width: 900px;
+    width: 100%;
+    padding: 40px;
+    margin: 20px auto;
+}
+
+/* ========================================
+   ENCABEZADO
+======================================== */
+
+.view-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #0B3D1E;
+}
+
+.view-header h2 {
+    color: #0B3D1E;
+    font-size: clamp(24px, 5vw, 32px);
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+.view-subtitle {
+    color: #666;
+    font-size: clamp(14px, 3vw, 16px);
+    margin: 0;
+}
+
+/* ========================================
+   SECCIONES DE INFORMACIÓN
+======================================== */
+
+.info-section {
+    margin-bottom: 35px;
+    padding: 25px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border-left: 4px solid #0B3D1E;
+}
+
+.section-title {
+    color: #0B3D1E;
+    font-size: clamp(18px, 4vw, 20px);
+    margin: 0 0 20px 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+/* ========================================
+   GRID DE INFORMACIÓN
+======================================== */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    box-shadow: 0 2px 8px rgba(11, 61, 30, 0.1);
+    border-color: #0B3D1E;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #0B3D1E;
+    font-size: clamp(12px, 2.5vw, 14px);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    color: #333;
+    font-size: clamp(14px, 3vw, 16px);
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+/* ========================================
+   TABLAS RESPONSIVAS
+======================================== */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Sobrescribir estilos de tabla de styles.css */
+.view-page table {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background: white;
+}
+
+.view-page table thead {
+    background-color: #0B3D1E;
+    color: white;
+}
+
+.view-page table th {
+    padding: 15px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: clamp(13px, 2.5vw, 15px);
+    border-bottom: 2px solid #0d4d27;
+    background-color: #0B3D1E;
+    color: white;
+}
+
+.view-page table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: clamp(13px, 2.5vw, 15px);
+    color: #333;
+}
+
+.view-page table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.view-page table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Tabla centrada */
+.table-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* ========================================
+   BADGES DE ESTATUS
+======================================== */
+
+.badge-status {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: clamp(12px, 2.5vw, 14px);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.badge-status.egresado {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.badge-status.en-seguimiento {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.badge-status.titulado {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+/* ========================================
+   BOTONES DE ACCIÓN
+======================================== */
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #e0e0e0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-edit,
+.btn-back {
+    flex: 1 1 auto;
+    min-width: 200px;
+    max-width: 300px;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    font-size: clamp(14px, 3vw, 16px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+}
+
+.btn-edit {
+    background-color: #0B3D1E;
+    color: white !important;
+    border: 2px solid #0B3D1E;
+}
+
+.btn-edit:hover {
+    background-color: #0d4d27;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(11, 61, 30, 0.3);
+}
+
+.btn-back {
+    background-color: white;
+    color: #0B3D1E !important;
+    border: 2px solid #0B3D1E;
+}
+
+.btn-back:hover {
+    background-color: #f5f5f5;
+    color: #0B3D1E !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   RESPONSIVE - TABLETS
+======================================== */
+
+@media (max-width: 768px) {
+    .view-page {
+        padding: 20px 10px;
+    }
+
+    .view-card {
+        padding: 30px 20px;
+        margin: 10px;
+    }
+
+    .info-section {
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .action-buttons {
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 25px;
+    }
+
+    .btn-edit,
+    .btn-back {
+        min-width: 150px;
+        padding: 12px 20px;
+    }
+
+    /* Tabla responsive - scroll horizontal */
+    .table-container {
+        margin: 15px -20px;
+        width: calc(100% + 40px);
+        border-radius: 0;
+    }
+
+    table th,
+    table td {
+        padding: 10px 8px;
+        white-space: nowrap;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - MÓVILES
+======================================== */
+
+@media (max-width: 480px) {
+    .view-page {
+        padding: 15px 5px;
+    }
+
+    .view-card {
+        padding: 20px 15px;
+        margin: 5px;
+        border-radius: 8px;
+    }
+
+    .view-header {
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+    }
+
+    .info-section {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-left-width: 3px;
+    }
+
+    .info-item {
+        padding: 12px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 25px;
+        padding-top: 20px;
+    }
+
+    .btn-edit,
+    .btn-back {
+        width: 100%;
+        min-width: unset;
+        max-width: unset;
+        padding: 12px 20px;
+    }
+
+    .badge-status {
+        padding: 5px 12px;
+    }
+
+    /* Tabla móvil - diseño apilado */
+    .table-container {
+        margin: 15px -15px;
+        width: calc(100% + 30px);
+    }
+
+    .view-page table {
+        font-size: 13px;
+    }
+
+    .view-page table thead {
+        display: none;
+    }
+
+    .view-page table tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .view-page table td {
+        display: block;
+        text-align: right;
+        padding: 10px 15px;
+        border-bottom: 1px solid #f0f0f0;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .view-page table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: 600;
+        color: #0B3D1E;
+        text-align: left;
+    }
+
+    .view-page table td:last-child {
+        border-bottom: none;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - MÓVILES PEQUEÑOS
+======================================== */
+
+@media (max-width: 360px) {
+    .view-card {
+        padding: 15px 10px;
+    }
+
+    .info-section {
+        padding: 12px;
+    }
+
+    .view-header h2 {
+        margin-bottom: 8px;
+    }
+
+    .section-title {
+        margin-bottom: 15px;
+    }
+
+    .btn-edit,
+    .btn-back {
+        padding: 10px 16px;
+    }
+}
+
+/* ========================================
+   IMPRESIÓN
+======================================== */
+
+@media print {
+    .view-page {
+        background: white;
+        padding: 0;
+    }
+
+    .view-card {
+        box-shadow: none;
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    .action-buttons {
+        display: none;
+    }
+
+    .info-section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .view-header {
+        border-bottom: 2px solid #0B3D1E;
+    }
+
+    .view-page table {
+        page-break-inside: avoid;
+    }
+
+    .btn-edit,
+    .btn-back {
+        display: none;
+    }
+
+    .view-page a {
+        color: inherit;
+        text-decoration: none;
+    }
+}
+
+/* ========================================
+   ACCESIBILIDAD
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-edit,
+    .btn-back,
+    .info-item {
+        transition: none;
+    }
+
+    .btn-edit:hover,
+    .btn-back:hover {
+        transform: none;
+    }
+}
