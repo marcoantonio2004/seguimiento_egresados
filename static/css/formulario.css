@@ -234,6 +234,11 @@ form select:focus {
     text-decoration: none; /* importante para links */
 }
 
+/* NUEVO: Mantener texto blanco en hover del botón primario */
+.registro-exito .btn-primary:hover {
+    color: white;
+}
+
 .alert {
     padding: 12px 15px;
     margin-bottom: 15px;
@@ -246,5 +251,3 @@ form select:focus {
     color: #a10000;
     border: 1px solid #ffb3b3;
 }
-
-
