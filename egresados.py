@@ -164,6 +164,27 @@ def editar_egresado(id):
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if request.method == "POST":
+        matricula = request.form["matricula"].strip()
+        
+        # Validar formato de matrícula
+        if not matricula.isdigit() or len(matricula) != 8:
+            flash("La matrícula debe tener exactamente 8 dígitos.", "error")
+            cur.execute("SELECT * FROM egresados WHERE id = %s", (id,))
+            egresado = cur.fetchone()
+            cur.close()
+            conn.close()
+            return render_template("editar_egresado.html", egresado=egresado)
+        
+        # Verificar si la matrícula ya existe en OTRO egresado
+        cur.execute("SELECT id FROM egresados WHERE matricula = %s AND id != %s", 
+                   (matricula, id))
+        if cur.fetchone():
+            flash("⚠️ La matrícula ya está registrada en otro egresado.", "error")
+            cur.execute("SELECT * FROM egresados WHERE id = %s", (id,))
+            egresado = cur.fetchone()
+            cur.close()
+            conn.close()
+            return render_template("editar_egresado.html", egresado=egresado)
 
         generacion = request.form["generacion"]
         if generacion == "OTRA":
@@ -182,7 +203,7 @@ def editar_egresado(id):
                 correo = %s
             WHERE id = %s
         """, (
-            request.form["matricula"],
+            matricula,
             request.form["nombre"],
             request.form["carrera"],
             generacion,
@@ -195,6 +216,7 @@ def editar_egresado(id):
         ))
 
         conn.commit()
+        flash("✅ Egresado actualizado correctamente.", "success")
         cur.close()
         conn.close()
         return redirect(url_for("egresados.listar_egresados"))

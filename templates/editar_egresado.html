@@ -44,7 +44,10 @@
                         id="matricula"
                         name="matricula"
                         value="{{ egresado.matricula }}"
-                        readonly>
+                        required
+                        maxlength="8"
+                        pattern="[0-9]{8}"
+                        title="La matrícula debe tener 8 dígitos">
                 </div>
 
                 <div class="form-group">
